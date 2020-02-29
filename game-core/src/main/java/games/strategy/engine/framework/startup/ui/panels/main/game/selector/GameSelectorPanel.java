@@ -320,6 +320,10 @@ public final class GameSelectorPanel extends JPanel implements Observer {
                     .runInBackgroundAndReturn(
                         "Loading savegame...",
                         () -> {
+                          if (!file.exists()) {
+                            return false;
+                          }
+
                           if (model.load(file)) {
                             setOriginalPropertiesMap(model.getGameData());
                             return true;
