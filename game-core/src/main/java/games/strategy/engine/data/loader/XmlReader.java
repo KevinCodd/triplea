@@ -1,5 +1,6 @@
-package games.strategy.engine.data;
+package games.strategy.engine.data.loader;
 
+import games.strategy.engine.data.GameParseException;
 import games.strategy.engine.data.loader.GameParser;
 import java.io.IOException;
 import java.io.InputStream;

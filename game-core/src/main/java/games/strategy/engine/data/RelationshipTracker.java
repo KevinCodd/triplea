@@ -35,7 +35,7 @@ public class RelationshipTracker extends RelationshipInterpreter {
    * Method for setting a relationship between two players, this should only be called during the
    * Game Parser.
    */
-  protected void setRelationship(
+  public void setRelationship(
       final GamePlayer p1, final GamePlayer p2, final RelationshipType r, final int roundValue) {
     relationships.put(new RelatedPlayers(p1, p2), new Relationship(r, roundValue));
   }
@@ -68,7 +68,7 @@ public class RelationshipTracker extends RelationshipInterpreter {
    * This methods will create all SelfRelations of all players including NullPlayer with oneself.
    * This method should only be called once.
    */
-  protected void setSelfRelations() {
+  public void setSelfRelations() {
     for (final GamePlayer p : getData().getPlayerList().getPlayers()) {
       setRelationship(p, p, getSelfRelationshipType());
     }
@@ -79,7 +79,7 @@ public class RelationshipTracker extends RelationshipInterpreter {
    * This methods will create all relationship of all players with the NullPlayer. This method
    * should only be called once.
    */
-  protected void setNullPlayerRelations() {
+  public void setNullPlayerRelations() {
     for (final GamePlayer p : getData().getPlayerList().getPlayers()) {
       setRelationship(p, GamePlayer.NULL_PLAYERID, getNullRelationshipType());
     }

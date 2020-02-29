@@ -7,6 +7,7 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 
 import games.strategy.engine.data.loader.GameDataVariableParser;
+import games.strategy.engine.data.loader.XmlReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
