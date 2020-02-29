@@ -74,12 +74,11 @@ public class GameSelectorModel extends Observable {
           this.fileName = file.getName();
           return true;
         }).orElse(false);
-
   }
 
   public GameData getGameData(final InputStream input) {
     try {
-      return GameDataManager.loadGame(input);
+      return GameLoader.loadGame(input);
     } catch (final IOException e) {
       log.log(Level.SEVERE, "Failed to load game", e);
       return null;

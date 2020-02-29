@@ -9,6 +9,7 @@ import com.google.common.base.Preconditions;
 import games.strategy.engine.chat.ChatMessagePanel.ChatSoundProfile;
 import games.strategy.engine.chat.ChatPanel;
 import games.strategy.engine.data.GameData;
+import games.strategy.engine.data.loader.GameLoader;
 import games.strategy.engine.framework.ClientGame;
 import games.strategy.engine.framework.GameDataManager;
 import games.strategy.engine.framework.GameObjectStreamFactory;
@@ -317,7 +318,7 @@ public class ClientModel implements IMessengerErrorListener {
     try {
       // this normally takes a couple seconds, but can take up to 60 seconds for a freaking huge
       // game
-      data = IoUtils.readFromMemory(gameData, GameDataManager::loadGame);
+      data = IoUtils.readFromMemory(gameData, GameLoader::loadGame);
     } catch (final IOException ex) {
       log.log(Level.SEVERE, "Failed to load game", ex);
       return;

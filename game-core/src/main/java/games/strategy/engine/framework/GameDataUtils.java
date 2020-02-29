@@ -2,6 +2,7 @@ package games.strategy.engine.framework;
 
 import games.strategy.engine.data.GameData;
 import games.strategy.engine.data.GameObjectOutputStream;
+import games.strategy.engine.data.loader.GameLoader;
 import games.strategy.engine.history.History;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -40,7 +41,7 @@ public final class GameDataUtils {
     try {
       final byte[] bytes =
           IoUtils.writeToMemory(os -> GameDataManager.saveGame(os, data, copyDelegates));
-      return IoUtils.readFromMemory(bytes, GameDataManager::loadGame);
+      return IoUtils.readFromMemory(bytes, GameLoader::loadGame);
     } catch (final IOException e) {
       log.log(Level.SEVERE, "Failed to clone game data", e);
       return null;
