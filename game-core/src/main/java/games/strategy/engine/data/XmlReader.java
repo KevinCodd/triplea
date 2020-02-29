@@ -1,5 +1,6 @@
 package games.strategy.engine.data;
 
+import games.strategy.engine.data.loader.GameParser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;

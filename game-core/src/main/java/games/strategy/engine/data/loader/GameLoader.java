@@ -1,7 +1,6 @@
 package games.strategy.engine.data.loader;
 
 import games.strategy.engine.data.GameData;
-import games.strategy.engine.data.GameParser;
 import games.strategy.engine.framework.GameDataManager;
 import java.io.File;
 import java.io.FileInputStream;

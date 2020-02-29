@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import games.strategy.engine.data.loader.GameParser;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
