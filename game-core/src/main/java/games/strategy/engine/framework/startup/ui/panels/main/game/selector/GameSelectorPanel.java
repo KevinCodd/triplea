@@ -68,6 +68,8 @@ public final class GameSelectorPanel extends JPanel implements Observer {
                   + "Low Luck, or Technology, etc.</html>")
           .build();
 
+  private String fileName = "-";
+
   public GameSelectorPanel(final GameSelectorModel model) {
     this.model = model;
     final GameData data = model.getGameData();
@@ -280,7 +282,7 @@ public final class GameSelectorPanel extends JPanel implements Observer {
           nameText.setText(model.getGameName());
           versionText.setText(model.getGameVersion());
           roundText.setText(model.getGameRound());
-          saveGameText.setText(model.getFileName());
+          saveGameText.setText(fileName);
 
           final boolean canSelectGameData = canSelectLocalGameData();
           final boolean canChangeHostBotGameData = canChangeHostBotGameData();
@@ -326,6 +328,7 @@ public final class GameSelectorPanel extends JPanel implements Observer {
 
                           if (model.load(file)) {
                             setOriginalPropertiesMap(model.getGameData());
+                            fileName = file.getName();
                             return true;
                           }
                           return false;
@@ -359,6 +362,7 @@ public final class GameSelectorPanel extends JPanel implements Observer {
                       return;
                     }
                   }
+                  fileName = "-";
                   model.load(entry);
                 });
         // warning: NPE check is not to protect against concurrency, another thread could still null

@@ -16,7 +16,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Observable;
-import java.util.Optional;
 import java.util.logging.Level;
 import javax.annotation.Nullable;
 import lombok.Getter;
@@ -33,7 +32,6 @@ public class GameSelectorModel extends Observable {
   @Getter private String gameName = "";
   @Getter private String gameVersion = "";
   @Getter private String gameRound = "";
-  @Nullable private String fileName;
   @Getter private boolean canSelect = true;
   @Getter private boolean hostIsHeadlessBot = false;
   // just for host bots, so we can get the actions for loading/saving games on the bots from this
@@ -50,11 +48,9 @@ public class GameSelectorModel extends Observable {
 
   public void load(final @Nullable GameData data, final @Nullable String fileName) {
     setGameData(data);
-    this.fileName = fileName;
   }
 
   public void load(final GameChooserEntry entry) {
-    fileName = null;
     setGameData(entry.getGameData());
     ClientSetting.defaultGameName.setValue(entry.getGameData().getGameName());
     ClientSetting.defaultGameUri.setValue(entry.getUri().toString());
@@ -87,7 +83,6 @@ public class GameSelectorModel extends Observable {
         }
       }
       setGameData(newData);
-      this.fileName = file.getName();
       return true;
     } catch (final Exception e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
@@ -118,10 +113,6 @@ public class GameSelectorModel extends Observable {
       this.gameVersion = gameVersion;
     }
     notifyObs();
-  }
-
-  public String getFileName() {
-    return Optional.ofNullable(fileName).orElse("-");
   }
 
   void setGameData(final GameData data) {
