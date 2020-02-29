@@ -30,21 +30,6 @@ public final class GameDataManager {
 
   private GameDataManager() {}
 
-  /**
-   * Loads game data from the specified file.
-   *
-   * @param file The file from which the game data will be loaded.
-   * @return The loaded game data.
-   * @throws IOException If an error occurs while loading the game.
-   */
-  public static GameData loadGame(final File file) throws IOException {
-    checkNotNull(file);
-
-    try (InputStream fis = new FileInputStream(file);
-        InputStream is = new BufferedInputStream(fis)) {
-      return loadGame(is);
-    }
-  }
 
   /**
    * Loads game data from the specified stream.
