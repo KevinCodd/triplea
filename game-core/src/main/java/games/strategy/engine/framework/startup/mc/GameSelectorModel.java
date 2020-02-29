@@ -3,13 +3,16 @@ package games.strategy.engine.framework.startup.mc;
 import games.strategy.engine.ClientFileSystemHelper;
 import games.strategy.engine.data.GameData;
 import games.strategy.engine.data.GameParseException;
+import games.strategy.engine.data.loader.GameParser;
 import games.strategy.engine.framework.GameDataManager;
 import games.strategy.engine.data.loader.GameLoader;
 import games.strategy.engine.framework.ui.GameChooserEntry;
 import games.strategy.engine.framework.ui.GameChooserModel;
 import games.strategy.triplea.ai.pro.ProAi;
 import games.strategy.triplea.settings.ClientSetting;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -66,14 +69,32 @@ public class GameSelectorModel extends Observable {
    *     returns false and internal {@code GameData} is null.
    */
   public boolean load(final File file) {
-    return GameLoader.builder()
-        .build()
-        .loadGame(file)
-        .map(data -> {
-          setGameData(data);
-          this.fileName = file.getName();
-          return true;
-        }).orElse(false);
+    if (!file.isFile()) {
+      return false;
+    }
+
+    final GameData newData;
+    try {
+      // if the file name is xml, load it as a new game
+      if (file.getName().toLowerCase().endsWith("xml")) {
+        try (InputStream inputStream = new FileInputStream(file)) {
+          newData = GameParser.parse(file.getAbsolutePath(), inputStream);
+        }
+      } else {
+        // try to load it as a saved game whatever the extension
+
+        try (InputStream fis = new FileInputStream(file);
+             InputStream is = new BufferedInputStream(fis)) {
+          newData = GameLoader.loadGame(is);
+        }
+      }
+      setGameData(newData);
+      this.fileName = file.getName();
+      return true;
+    } catch (final Exception e) {
+      log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
+      return false;
+    }
   }
 
   void setCanSelect(final boolean canSelect) {

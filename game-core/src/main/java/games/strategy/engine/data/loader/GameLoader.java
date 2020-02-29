@@ -7,15 +7,10 @@ import games.strategy.engine.data.GameData;
 import games.strategy.engine.delegate.IDelegate;
 import games.strategy.engine.framework.GameDataManager;
 import games.strategy.triplea.UrlConstants;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.util.Optional;
-import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import lombok.Builder;
 import lombok.extern.java.Log;
@@ -26,35 +21,6 @@ import org.triplea.util.Version;
 public class GameLoader {
 
   // various error handling callbacks
-
-
-  public Optional<GameData> loadGame(final File file) {
-    if (!file.isFile()) {
-      return Optional.empty();
-    }
-
-    final GameData newData;
-    try {
-      // if the file name is xml, load it as a new game
-      if (file.getName().toLowerCase().endsWith("xml")) {
-        try (InputStream inputStream = new FileInputStream(file)) {
-          newData = GameParser.parse(file.getAbsolutePath(), inputStream);
-        }
-      } else {
-        // try to load it as a saved game whatever the extension
-
-        try (InputStream fis = new FileInputStream(file);
-             InputStream is = new BufferedInputStream(fis)) {
-          newData = loadGame(is);
-        }
-      }
-      return Optional.of(newData);
-    } catch (final Exception e) {
-      log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
-      return Optional.empty();
-    }
-  }
-
 
   /**
    * Loads game data from the specified stream.
