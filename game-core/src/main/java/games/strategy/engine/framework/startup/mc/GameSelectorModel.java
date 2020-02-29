@@ -76,15 +76,6 @@ public class GameSelectorModel extends Observable {
         }).orElse(false);
   }
 
-  public GameData getGameData(final InputStream input) {
-    try {
-      return GameLoader.loadGame(input);
-    } catch (final IOException e) {
-      log.log(Level.SEVERE, "Failed to load game", e);
-      return null;
-    }
-  }
-
   void setCanSelect(final boolean canSelect) {
     this.canSelect = canSelect;
     notifyObs();

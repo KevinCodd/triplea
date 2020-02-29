@@ -12,6 +12,7 @@ import static games.strategy.engine.framework.CliProperties.TRIPLEA_SERVER;
 import games.strategy.engine.ClientFileSystemHelper;
 import games.strategy.engine.chat.Chat;
 import games.strategy.engine.data.GameData;
+import games.strategy.engine.data.loader.GameLoader;
 import games.strategy.engine.data.properties.GameProperties;
 import games.strategy.engine.framework.ArgParser;
 import games.strategy.engine.framework.GameRunner;
@@ -21,6 +22,7 @@ import games.strategy.engine.framework.startup.mc.ServerModel;
 import games.strategy.triplea.Constants;
 import games.strategy.triplea.settings.ClientSetting;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 import java.util.Set;
@@ -135,9 +137,11 @@ public class HeadlessGameServer {
       if (input == null || fileName == null) {
         return;
       }
-      final GameData data = gameSelectorModel.getGameData(input);
-      if (data == null) {
-        log.info("Loading GameData failed for: " + fileName);
+      final GameData data;
+      try {
+        data = GameLoader.loadGame(input);
+      } catch (final IOException e) {
+        log.log(Level.SEVERE, "Failed to load game", e);
         return;
       }
       final String mapNameProperty = data.getProperties().get(Constants.MAP_NAME, "");
