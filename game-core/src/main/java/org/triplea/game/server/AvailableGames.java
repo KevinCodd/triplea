@@ -138,18 +138,6 @@ final class AvailableGames {
     return new HashSet<>(availableGames.keySet());
   }
 
-  /**
-   * Returns the path to the file associated with the specified game.
-   *
-   * <p>The "path" is actually a URI in string form.
-   *
-   * @param gameName The name of the game whose file path is to be retrieved; may be {@code null}.
-   * @return The path to the game file; or {@code null} if the game is not available.
-   */
-  String getGameFilePath(final String gameName) {
-    return Optional.ofNullable(availableGames.get(gameName)).map(Object::toString).orElse(null);
-  }
-
   /** Can return null. */
   GameData getGameData(final String gameName) {
     return Optional.ofNullable(availableGames.get(gameName))

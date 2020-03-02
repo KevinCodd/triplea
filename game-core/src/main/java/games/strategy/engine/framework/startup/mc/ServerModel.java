@@ -228,7 +228,7 @@ public class ServerModel extends Observable implements IConnectionChangeListener
         }
 
         @Override
-        public void changeToGameSave(final byte[] bytes, final String fileName) {
+        public void changeToGameSave(final byte[] bytes) {
           // TODO: change to a string message return, so we can tell the user/requestor if it was
           // successful or not, and why
           // if not.
@@ -241,11 +241,11 @@ public class ServerModel extends Observable implements IConnectionChangeListener
                 bytes,
                 is -> {
                   try (InputStream inputStream = new BufferedInputStream(is)) {
-                    headless.loadGameSave(inputStream, fileName);
+                    headless.loadGameSave(inputStream);
                   }
                 });
           } catch (final Exception e) {
-            log.log(Level.SEVERE, "Failed to load save game: " + fileName, e);
+            log.log(Level.SEVERE, "Failed to load save game", e);
           }
         }
 

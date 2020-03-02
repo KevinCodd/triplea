@@ -35,7 +35,7 @@ public interface IServerStartupRemote extends IRemote {
 
   void changeToLatestAutosave(HeadlessAutoSaveType typeOfAutosave);
 
-  void changeToGameSave(byte[] bytes, String fileName);
+  void changeToGameSave(byte[] bytes);
 
   byte[] getSaveGame();
 

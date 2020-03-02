@@ -41,6 +41,6 @@ public class ChangeGameToSaveGameClientAction extends AbstractAction {
       log.log(Level.SEVERE, "Failed to read file: " + saveGame, e);
       return;
     }
-    serverStartupRemote.changeToGameSave(bytes, saveGame.getName());
+    serverStartupRemote.changeToGameSave(bytes);
   }
 }

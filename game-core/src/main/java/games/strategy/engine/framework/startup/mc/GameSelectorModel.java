@@ -43,10 +43,10 @@ public class GameSelectorModel extends Observable {
   }
 
   public void resetGameDataToNull() {
-    load(null, null);
+    setGameData(null);
   }
 
-  public void load(final @Nullable GameData data, final @Nullable String fileName) {
+  public void load(final @Nullable GameData data) {
     setGameData(data);
   }
 
