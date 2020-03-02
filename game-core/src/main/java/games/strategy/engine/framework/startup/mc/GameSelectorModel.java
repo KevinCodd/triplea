@@ -2,6 +2,7 @@ package games.strategy.engine.framework.startup.mc;
 
 import com.google.common.base.Preconditions;
 import games.strategy.engine.ClientFileSystemHelper;
+import games.strategy.engine.data.EngineVersionException;
 import games.strategy.engine.data.GameData;
 import games.strategy.engine.data.GameParseException;
 import games.strategy.engine.data.loader.GameLoader;
@@ -13,6 +14,7 @@ import games.strategy.triplea.settings.ClientSetting;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Observable;
@@ -76,7 +78,6 @@ public class GameSelectorModel extends Observable {
         }
       } else {
         // try to load it as a saved game whatever the extension
-
         try (InputStream fis = new FileInputStream(file);
             InputStream is = new BufferedInputStream(fis)) {
           newData = GameLoader.loadGame(is);
@@ -84,7 +85,11 @@ public class GameSelectorModel extends Observable {
       }
       setGameData(newData);
       return true;
-    } catch (final Exception e) {
+    } catch (final GameParseException e) {
+
+    } catch (final EngineVersionException e) {
+
+    } catch(final IOException e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
       return false;
     }

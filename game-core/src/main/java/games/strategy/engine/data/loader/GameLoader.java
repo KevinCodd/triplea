@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.zip.GZIPInputStream;
 import lombok.Builder;
 import lombok.extern.java.Log;
@@ -51,36 +52,34 @@ public class GameLoader {
       data.postDeSerialize();
       loadDelegates(input, data);
       return data;
-    } catch (final ClassNotFoundException cnfe) {
+      } catch(final ClassNotFoundException e) {
+
+    } catch (final Exception cnfe) {
       throw new IOException(cnfe.getMessage());
     }
   }
 
-  private static void loadDelegates(final ObjectInputStream input, final GameData data)
-      throws ClassNotFoundException, IOException {
+  private static void loadDelegates(final ObjectInputStream input, final GameData data) throws
+      ClassNotFoundException, NoSuchMethodException, SecurityException,
+          IllegalAccessException, InvocationTargetException, InstantiationException, IOException {
     for (Object endMarker = input.readObject();
-         !endMarker.equals(GameDataManager.DELEGATE_LIST_END);
-         endMarker = input.readObject()) {
+        !endMarker.equals(GameDataManager.DELEGATE_LIST_END);
+        endMarker = input.readObject()) {
       final String name = (String) input.readObject();
       final String displayName = (String) input.readObject();
       final String className = (String) input.readObject();
       final IDelegate instance;
-      try {
-        instance =
-            Class.forName(className)
-                .asSubclass(IDelegate.class)
-                .getDeclaredConstructor()
-                .newInstance();
-        instance.initialize(name, displayName);
-        data.addDelegate(instance);
-      } catch (final Exception e) {
-        throw new IOException(e);
-      }
+      instance =
+          Class.forName(className)
+              .asSubclass(IDelegate.class)
+              .getDeclaredConstructor()
+              .newInstance();
+      instance.initialize(name, displayName);
+      data.addDelegate(instance);
       final String next = (String) input.readObject();
       if (next.equals(GameDataManager.DELEGATE_DATA_NEXT)) {
         instance.loadState((Serializable) input.readObject());
       }
     }
   }
-
 }
