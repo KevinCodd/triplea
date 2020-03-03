@@ -6,12 +6,10 @@ import games.strategy.engine.ClientContext;
 import games.strategy.engine.data.GameData;
 import games.strategy.engine.delegate.IDelegate;
 import games.strategy.engine.framework.GameDataManager;
-import games.strategy.triplea.UrlConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
 import lombok.AllArgsConstructor;
@@ -48,7 +46,6 @@ public class GameLoader {
     }
   }
 
-
   /**
    * Loads game data from the specified stream.
    *
@@ -66,14 +63,13 @@ public class GameLoader {
 
       if (readVersion instanceof Version) {
         if (!ClientContext.engineVersion().isCompatibleWithEngineVersion((Version) readVersion)) {
-          if(ClientContext.engineVersion().isGreaterThan((Version) readVersion)) {
+          if (ClientContext.engineVersion().isGreaterThan((Version) readVersion)) {
             throw new EngineIncompatibleWithNewerSave(readVersion.toString());
           }
         }
       } else if (readVersion instanceof games.strategy.util.Version) {
         throw new EngineIncompatibleWithOlderSave(
-            ((games.strategy.util.Version) readVersion).getExactVersion()
-        );
+            ((games.strategy.util.Version) readVersion).getExactVersion());
       }
 
       final GameData data = (GameData) input.readObject();

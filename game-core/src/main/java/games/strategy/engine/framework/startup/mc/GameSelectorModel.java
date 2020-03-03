@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Observable;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import javax.annotation.Nullable;
 import lombok.Getter;
@@ -92,7 +91,7 @@ public class GameSelectorModel extends Observable {
     } catch (final EngineVersionException e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
       return false;
-    } catch(final IOException e) {
+    } catch (final IOException e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
       return false;
     }

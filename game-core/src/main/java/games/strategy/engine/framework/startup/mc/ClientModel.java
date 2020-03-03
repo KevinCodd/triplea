@@ -11,7 +11,6 @@ import games.strategy.engine.chat.ChatPanel;
 import games.strategy.engine.data.GameData;
 import games.strategy.engine.data.loader.GameLoader;
 import games.strategy.engine.framework.ClientGame;
-import games.strategy.engine.framework.GameDataManager;
 import games.strategy.engine.framework.GameObjectStreamFactory;
 import games.strategy.engine.framework.GameRunner;
 import games.strategy.engine.framework.GameState;
