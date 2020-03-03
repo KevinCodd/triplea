@@ -53,7 +53,7 @@ public class GameLoader {
       loadDelegates(input, data);
       return data;
       } catch(final ClassNotFoundException e) {
-
+      throw new IOException(e.getMessage());
     } catch (final Exception cnfe) {
       throw new IOException(cnfe.getMessage());
     }

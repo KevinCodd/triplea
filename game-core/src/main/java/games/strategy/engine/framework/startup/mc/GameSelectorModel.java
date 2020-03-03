@@ -86,8 +86,12 @@ public class GameSelectorModel extends Observable {
       setGameData(newData);
       return true;
     } catch (final GameParseException e) {
+      log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
+      return false;
 
     } catch (final EngineVersionException e) {
+      log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
+      return false;
 
     } catch(final IOException e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
