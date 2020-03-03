@@ -12,16 +12,42 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
 import java.util.zip.GZIPInputStream;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
+import org.triplea.java.function.ThrowingConsumer;
 import org.triplea.util.Version;
 
 @Builder
+@NoArgsConstructor
 @Log
 public class GameLoader {
 
-  // various error handling callbacks
+  @Builder.Default
+  private ThrowingConsumer<String, IOException> errorHandler =
+      err -> {
+        throw new IOException(err);
+      };
+
+  @AllArgsConstructor
+  public static class EngineIncompatibleWithNewerSave extends Exception {
+    private final String versionFound;
+  }
+
+  @AllArgsConstructor
+  public static class EngineIncompatibleWithOlderSave extends Exception {
+    private final String versionFound;
+  }
+
+  public static class EngineIncompatibleWithSave extends Exception {
+    private EngineIncompatibleWithSave(final Exception cause) {
+      log.log(Level.INFO, "Unable to determine game version of save game", cause);
+    }
+  }
+
 
   /**
    * Loads game data from the specified stream.
@@ -31,37 +57,36 @@ public class GameLoader {
    * @return The loaded game data.
    * @throws IOException If an error occurs while loading the game.
    */
-  public static GameData loadGame(final InputStream is) throws IOException {
+  public GameData loadGame(final InputStream is) throws IOException {
     checkNotNull(is);
 
     final ObjectInputStream input = new ObjectInputStream(new GZIPInputStream(is));
     try {
-      final Version readVersion = (Version) input.readObject();
-      if (!ClientContext.engineVersion().isCompatibleWithEngineVersion(readVersion)) {
-        final String error =
-            "Incompatible engine versions. We are: "
-                + ClientContext.engineVersion()
-                + " . Trying to load game created with: "
-                + readVersion
-                + "\nTo download the latest version of TripleA, Please visit "
-                + UrlConstants.DOWNLOAD_WEBSITE;
-        throw new IOException(error);
+      final Object readVersion = input.readObject();
+
+      if (readVersion instanceof Version) {
+        if (!ClientContext.engineVersion().isCompatibleWithEngineVersion((Version) readVersion)) {
+          if(ClientContext.engineVersion().isGreaterThan((Version) readVersion)) {
+            throw new EngineIncompatibleWithNewerSave(readVersion.toString());
+          }
+        }
+      } else if (readVersion instanceof games.strategy.util.Version) {
+        throw new EngineIncompatibleWithOlderSave(
+            ((games.strategy.util.Version) readVersion).getExactVersion()
+        );
       }
 
       final GameData data = (GameData) input.readObject();
       data.postDeSerialize();
       loadDelegates(input, data);
       return data;
-      } catch(final ClassNotFoundException e) {
+    } catch (final Exception e) {
       throw new IOException(e.getMessage());
-    } catch (final Exception cnfe) {
-      throw new IOException(cnfe.getMessage());
     }
   }
 
-  private static void loadDelegates(final ObjectInputStream input, final GameData data) throws
-      ClassNotFoundException, NoSuchMethodException, SecurityException,
-          IllegalAccessException, InvocationTargetException, InstantiationException, IOException {
+  private static void loadDelegates(final ObjectInputStream input, final GameData data)
+      throws Exception {
     for (Object endMarker = input.readObject();
         !endMarker.equals(GameDataManager.DELEGATE_LIST_END);
         endMarker = input.readObject()) {

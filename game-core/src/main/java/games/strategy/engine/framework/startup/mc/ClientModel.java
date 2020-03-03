@@ -318,7 +318,8 @@ public class ClientModel implements IMessengerErrorListener {
     try {
       // this normally takes a couple seconds, but can take up to 60 seconds for a freaking huge
       // game
-      data = IoUtils.readFromMemory(gameData, GameLoader::loadGame);
+      data =
+          IoUtils.readFromMemory(gameData, inputStream -> new GameLoader().loadGame(inputStream));
     } catch (final IOException ex) {
       log.log(Level.SEVERE, "Failed to load game", ex);
       return;

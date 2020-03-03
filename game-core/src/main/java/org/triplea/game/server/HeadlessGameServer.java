@@ -60,6 +60,10 @@ public class HeadlessGameServer {
           gameSelectorModel.load(file);
         }
       } catch (final Exception e) {
+        log.log(
+            Level.WARNING,
+            "Failed to load game: " + fileName + ", defaulting to no game selected",
+            e);
         gameSelectorModel.resetGameDataToNull();
       }
     }

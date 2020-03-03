@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Observable;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import javax.annotation.Nullable;
 import lombok.Getter;
@@ -65,7 +66,7 @@ public class GameSelectorModel extends Observable {
    * @return True if file parsing was successful and an internal {@code GameData} was set. Otherwise
    *     returns false and internal {@code GameData} is null.
    */
-  public boolean load(final File file) {
+  public String load(final File file) {
     Preconditions.checkArgument(
         file.exists(), "Error, file does not exist: " + file.getAbsolutePath());
 
@@ -88,11 +89,9 @@ public class GameSelectorModel extends Observable {
     } catch (final GameParseException e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
       return false;
-
     } catch (final EngineVersionException e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
       return false;
-
     } catch(final IOException e) {
       log.log(Level.SEVERE, "Error loading game file: " + file.getAbsolutePath(), e);
       return false;
